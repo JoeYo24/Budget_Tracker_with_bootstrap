@@ -7,7 +7,7 @@ default: &default
   public_output_path: packs
   cache_path: tmp/cache/webpacker
   webpack_compile_output: true
-
+  
   # Additional paths webpack should lookup modules
   # ['app/assets', 'engine/foo/app/assets']
   additional_paths: []
@@ -16,7 +16,7 @@ default: &default
   cache_manifest: false
 
   # Extract and emit a css file
-  extract_css: false
+  extract_css: true
 
   static_assets_extensions:
     - .jpg

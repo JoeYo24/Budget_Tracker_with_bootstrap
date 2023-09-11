@@ -1,0 +1,57 @@
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #e4e7cd !important;
+    margin: 0;
+    padding: 0;
+}
+.sidebarContainer {
+    display: flex;
+    height: 100vh;
+    width: 20%;
+    flex: .2;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    @media screen and (max-width: 600px) {
+        margin-left: auto;
+    }
+}
+.addTransaction {
+    height: 100vh;
+    flex: .8;
+    display: flex;
+    flex-direction: column;
+    max-width: fit-content;
+    padding-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+
+    & .submit {
+        background-color: rgb(33,119,46);
+        border-radius: 10px;
+        color: #d5eedb;
+        font-weight: 500;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        width: fit-content;
+
+        &:hover {
+            background-color: #1a5f24;
+            color: #d5eedb;
+        }
+    }
+    
+    & .form-group {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 500px;
+    }
+}

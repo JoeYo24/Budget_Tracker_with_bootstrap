@@ -1,0 +1,104 @@
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #e4e7cd !important;
+    overflow-x: hidden !important;
+}
+.sidebarContainer {
+    display: flex;
+    height: 100vh;
+    width: 20%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    margin-left: 10px;
+    margin-right: auto;
+    @media screen and (max-width: 600px) {
+        margin-left: auto;
+    }
+}
+.compareContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 50%;
+    padding-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px;
+}
+/* Styling for the date range container */
+.dateRange {
+    padding: 20px;
+    border: 1px solid #646464;
+    border-radius: 5px;
+    max-width: fit-content !important;
+
+    @media screen and (max-width: 600px) {
+        margin-bottom: 20px;
+    }
+  
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+  
+    // Styling for the SingleDatePicker input
+    & .SingleDatePicker {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    // Styling for the "Compare" button
+    & button {
+      background-color: rgb(33,119,46);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      max-height: fit-content;
+      cursor: pointer !important;
+  
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+  
+  /* Styling for the transaction list container */
+  .transactionList {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 20px;
+    @media screen and (max-width: 600px) {
+        padding: 0px;
+    }
+  
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+  
+    // Styling for individual transactions
+    .transaction {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+  
+      // Styling for transaction text
+      p {
+        margin: 0;
+      }
+  
+      // Styling for transaction amounts
+      p:last-child {
+        font-weight: bold;
+        color: #007bff;
+      }
+    }
+  }
+.headerText {
+    margin-bottom: 20px;
+}
+  

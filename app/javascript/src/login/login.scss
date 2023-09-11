@@ -1,0 +1,69 @@
+h1 {
+    font-size: 24px;
+    color: #d5eedb !important;
+}
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #e4e7cd !important;
+    overflow-x: hidden !important;
+}
+.container {
+    margin-top: 50px;
+    background-color: rgba(33,119,46, .8);
+    height: 80vh;
+    padding-top: 20px;
+}
+.submit {
+    margin-top: 20px;
+    display: flex;
+    margin-bottom: 20px;
+}
+.submit-btn {
+    background-color: rgb(33,119,46) !important;
+    color: #d5eedb !important;
+    margin-right: auto;
+    margin-left: auto;
+}
+.submit-btn:hover {
+    background-color: #1a5f24 !important;
+}
+.form-group {
+    margin-bottom: 5px;
+    
+}
+.bottom-text {
+    color: #d5eedb !important;
+    padding-top: 40px;
+    
+    a {
+        color: #d5eedb !important;
+        text-decoration: none !important;
+    }
+
+    a:hover {
+        text-decoration: solid !important;
+        font-weight: bold !important;
+    }
+}
+
+label {
+    color: #d5eedb !important;
+}
+.form-control {
+    max-width: 80% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+.form-control:focus {
+    border-color: #1a5f24 !important;
+    box-shadow: 0 0 0 0.2rem rgba(26,95,36,.25) !important;
+}
+.form-label {
+    margin-right: auto !important;
+    margin-left: 115px !important;
+}
+.form-group {
+    margin-right: auto !important;
+    margin-left: auto !important;
+    justify-content: center !important;
+}

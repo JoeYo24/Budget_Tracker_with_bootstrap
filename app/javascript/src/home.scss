@@ -1,0 +1,79 @@
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #e4e7cd !important;
+    overflow-x: hidden !important;
+}
+.main {
+    background-color: #e4e7cd;
+    padding-top: 120px;
+    margin-bottom: 20px;
+}
+.main-text {
+    padding-top: 100px;
+}
+.navbar {
+    position: fixed !important;
+    top: 0 !important; 
+    backdrop-filter: blur(5px) !important;
+    z-index: 1000 !important;
+}
+.navbar, .footer {
+    background-color: rgba(33,119,46, .8);
+}
+#dropdown-basic:hover {
+    background-color: #1a5f24 !important;
+}
+#dropdown-basic {
+    background-color: #21772e !important;
+}
+.nav-link {
+    color: #d5eedb !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+}
+.navbar-nav {
+    margin-right: auto;
+}
+.navbar-start, .navbar-end {
+    display: flex;
+}
+.navbar-end {
+    margin-left: auto;
+    margin-right: 35px;
+}
+.navbar-start {
+    margin-right: auto;
+    justify-content: space-between;
+
+}
+.navbar-start > .navbar-nav > .nav-item {
+    padding: 0 20px;
+}
+.navbar-end > .navbar-nav > .nav-item {
+    padding: 0 20px;
+}
+.footer {
+    padding: 20px;
+}
+.footer-text {
+    color: #d5eedb;
+    text-decoration: none !important;
+    font-size: 14px;
+}
+h1 {
+    font-size: 24px;
+}
+p {
+    font-size: 18px;
+}
+svg {
+    width: 600px !important;
+    height: 550px !important;
+}
+.VictoryContainer {
+    margin-left: 10px;
+    padding-right: 100px !important;
+}
+
+
+  

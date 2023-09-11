@@ -1,0 +1,57 @@
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #e4e7cd !important;
+    margin: 0;
+    padding: 0;
+}
+.sidebarContainer {
+    display: flex;
+    height: 100vh;
+    flex: .2;
+    width: 20%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    @media screen and (max-width: 600px) {
+        margin-left: auto;
+    }
+}
+.addGoal {
+    display: flex;
+    flex: .6; 
+    flex-direction: column;
+    max-width: 700px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+
+    @media screen and (max-width: 1000px) {
+        max-width: fit-content;
+    }  
+
+    & .submit {
+        background-color: rgb(33,119,46);
+        border-radius: 10px;
+        color: #d5eedb;
+        font-weight: 500;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        width: fit-content;
+
+        &:hover {
+            background-color: #1a5f24;
+            color: #d5eedb;
+        }
+    }
+
+    & .form-group {
+        margin-right: auto;
+        margin-left: auto;
+    }
+}

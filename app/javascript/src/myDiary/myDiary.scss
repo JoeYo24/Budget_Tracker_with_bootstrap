@@ -1,0 +1,93 @@
+body {
+    font-family: 'Montserrat', sans-serif !important;
+    background-color: #e4e7cd !important;
+    margin: 0;
+    padding: 0;
+}
+
+.myDiary {
+    display: flex;
+    flex-direction: column; 
+}
+
+.sidebar {
+    /* Remove flex properties for sidebar */
+    margin: 2rem;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: auto;
+}
+
+.mainContent {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    @media  screen and (max-width: 1000px) {
+        margin-right: 20px;
+    }
+}
+
+.footer {
+    /* Remove flex properties for footer */
+    width: 100%;
+    text-align: center;
+    bottom: 0;
+    margin-top: 100px;
+    position: static;
+}
+.VictoryContainer > svg {
+    height: 400px !important;
+    width: 400px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+    
+}
+.VictoryContainer {
+    display: flex;
+}
+.addTransaction {
+    margin-right: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.budget {
+    margin-top: 20px;
+    padding-top: 10px;
+    background-color: rgba(33,119,46, .8);
+    color: #d5eedb;
+}
+.transactions {
+    background-color: rgba(33,119,46, .8);
+    color: #d5eedb;
+    @media screen and (min-width: 700px) {
+        padding: 8px;
+    }
+}
+.pieChart {
+    background-color: rgba(33,119,46, .8);
+    color: #d5eedb;
+    margin-bottom: 20px;
+}
+.transaction_body {
+    display: flex;
+}
+table {
+    @media screen and (max-width: 700px) {
+        font-size: 12px;
+    }
+    @media screen and (max-width: 500px) {
+        font-size: 10px;
+    }
+    & .deleteButton {
+        @media screen and (max-width: 600px) {
+            font-size: 8px;
+            height: fit-content;
+            width: fit-content;
+        }
+            
+    }
+}

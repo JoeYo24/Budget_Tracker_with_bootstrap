@@ -4,6 +4,7 @@ import './home.scss'
 import DollarDiaryLogo from './utils/images/DollarDiaryLogo.png'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { VictoryPie } from 'victory';
+import DollarDiaryScreenshot from './utils/images/BudgetTrackerScreen.png'
 
 function MyDropdown() {
   return (
@@ -24,7 +25,7 @@ const Home = () => {
 
     return (
         <div className='home'>
-            <nav className="navbar wavy-background navbar-expand-xl me-auto ms-auto w-100">
+            <nav className="navbar navbar-expand-xl me-auto ms-auto w-100">
                 {/* Navbar */}
                 <div className="navbar-brand ps-3">
                     <a className="navbar-item" href="/">
@@ -61,19 +62,22 @@ const Home = () => {
                         <p className='text-center align-items-center'>Sign up today to start tracking your expenses!</p>
                     </div>
                     <div className='col-12 col-md-6 main-image'>
-                        <img  className='img-responsive rounded' src='https://picsum.photos/seed/picsum/600/400' alt='placeholder' /> 
+                        <img className='img-responsive headerImage' src={DollarDiaryScreenshot} alt='placeholder' /> 
                     </div>
                 </div>
                 <div className='row'>
                     <div className='col-12 col-md-6'>
-                        <VictoryPie data={[
-                            { x: "Needs", y: 50 },
-                            { x: "Wants", y: 30 },
-                            { x: "Savings", y: 20}
-                        ]}
-                        colorScale={["#398632", "#1A4B04", "#B0D78D"]}
-                        style={{ width: "450", height: "400" }}
-                        />
+                        <div className='pieContainer'>
+                            <VictoryPie
+                                data={[
+                                    { x: "Needs", y: 50 },
+                                    { x: "Wants", y: 30 },
+                                    { x: "Savings", y: 20 }
+                                ]}
+                                colorScale={["#398632", "#1A4B04", "#B0D78D"]}
+                                style={{ width: "100%", height: "100%", labels: { fontSize: '9px', fontFamily: 'Montserrat, sans-serif' } }} // Adjust the style here
+                            />
+                        </div>
                     </div>
                     <div className='col-12 col-md-6 main-text'>
                         <div className='text-center align-items-center'>
@@ -89,7 +93,7 @@ const Home = () => {
                     </div>
                 </div>
             </main>
-            <footer className='footer wavy-background'>
+            <footer className='footer'>
                 {/* Footer */}
                 <div className='row'>
                     <div className='col-4'>

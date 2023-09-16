@@ -1,0 +1,1 @@
+json.message "Monthly savings calculation and update completed successfully."

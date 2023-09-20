@@ -1,11 +1,52 @@
 import React from 'react';
 import '../login/login.scss';
+import { safeCredentialsForm, authenticityHeader, handleErrors } from '../utils/fetchHelper.js'
 
 const SignupWidget = () => {
 
     const handleClick = (e) => {
         e.preventDefault();
-        window.location.href = '/my-diary'
+        fetch('/api/users', safeCredentialsForm ({
+            method: 'POST',
+            body: JSON.stringify({
+                user: {
+                    email: document.getElementById('email').value, 
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value,
+                    salary_after_tax: document.getElementById('salary_after_tax').value
+                }
+            }),
+            headers: authenticityHeader({'Content-Type': 'application/json'})
+
+        }))
+        .then(handleErrors)
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+        fetch('/api/sessions', safeCredentialsForm({
+            method: 'POST',
+            body: JSON.stringify({
+                user: {
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                    username: document.getElementById('username').value
+                }
+            }),
+            headers: authenticityHeader({'Content-Type': 'application/json'})
+        }))  
+        .then(handleErrors)
+        .then(data => {
+            if (data.success) {
+            window.location.href = '/my-diary';
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })          
     }
 
   return (
@@ -19,7 +60,7 @@ const SignupWidget = () => {
                 </div>
                 <div className='form-group'>
                     <label className='form-label' htmlFor='username'>Username</label>
-                    <input type='username' className='form-control' id='username' placeholder='Enter username' />
+                    <input type='text' className='form-control' id='username' placeholder='Enter username' />
                 </div>
                 <div className='form-group'>
                     <label className='form-label' htmlFor='password'>Password</label>
@@ -27,7 +68,7 @@ const SignupWidget = () => {
                 </div>
                 <div className='form-group'>
                     <label className='form-label' htmlFor='salary_after_tax'>Salary After Tax</label>
-                    <input type='salary_after_tax' className='form-control' id='salary_after_tax' placeholder='Enter salary after tax' />
+                    <input type='number' className='form-control' id='salary_after_tax' placeholder='Enter salary after tax' />
                 </div>
                 <div className='submit'>
                     <button onClick={handleClick} type='submit' className='btn btn-lg btn-block submit-btn'>Submit</button>

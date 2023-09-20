@@ -10,4 +10,24 @@ class User < ApplicationRecord
     validates :password, presence: true, length: { minimum: 8 }
     validates :email, presence: true, uniqueness: true
     validates :salary_after_tax, presence: true, numericality: { greater_than: 0}
+
+    validates_uniqueness_of :username 
+    validates_uniqueness_of :email
+
+    after_validation :hash_password
+
+    def self.authenticate(password) 
+        if BCrypt::Password.new(self.password_digest) === password 
+            return self 
+        else 
+            return false 
+        end 
+    end
+
+    private 
+
+    def hash_password 
+        self.password = BCrypt::Password.create(password)
+    end
 end
+

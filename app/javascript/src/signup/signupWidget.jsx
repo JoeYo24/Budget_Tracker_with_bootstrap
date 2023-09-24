@@ -3,51 +3,61 @@ import '../login/login.scss';
 import { safeCredentialsForm, authenticityHeader, handleErrors } from '../utils/fetchHelper.js'
 
 const SignupWidget = () => {
-
-    const handleClick = (e) => {
+    const handleClick = async (e) => {
         e.preventDefault();
-        fetch('/api/users', safeCredentialsForm ({
-            method: 'POST',
-            body: JSON.stringify({
-                user: {
-                    email: document.getElementById('email').value, 
-                    username: document.getElementById('username').value,
-                    password: document.getElementById('password').value,
-                    salary_after_tax: document.getElementById('salary_after_tax').value
-                }
-            }),
-            headers: authenticityHeader({'Content-Type': 'application/json'})
 
-        }))
-        .then(handleErrors)
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        try {
+            // First, create the user
+            const createUserResponse = await fetch('/api/users', safeCredentialsForm({
+                method: 'POST',
+                body: JSON.stringify({
+                    user: {
+                        email: document.getElementById('email').value,
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value,
+                        salary_after_tax: document.getElementById('salary_after_tax').value,
+                    },
+                }),
+                headers: authenticityHeader({ 'Content-Type': 'application/json' }),
+            }));
 
-        fetch('/api/sessions', safeCredentialsForm({
-            method: 'POST',
-            body: JSON.stringify({
-                user: {
-                    email: document.getElementById('email').value,
-                    password: document.getElementById('password').value,
-                    username: document.getElementById('username').value
+            const createUserData = await createUserResponse.json();
+
+            if (createUserResponse.ok) {
+                // User creation was successful, proceed to session creation
+                const createSessionResponse = await fetch('/api/sessions', safeCredentialsForm({
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user: {
+                            email: document.getElementById('email').value,
+                            password: document.getElementById('password').value,
+                        },
+                    }),
+                    headers: authenticityHeader({ 'Content-Type': 'application/json' }),
+                }));
+
+                const createSessionData = await createSessionResponse.json();
+                console.log('Session creation response: ', createSessionData);
+
+                if (createSessionResponse.ok) {
+                    if (createSessionData.token !== null) {
+                        const token = createSessionData.token;
+                        localStorage.setItem('authToken', token);
+                        // Session creation was successful, redirect to /my-diary
+                        window.location.href = '/my-diary';
+                    } else {
+                        console.log('Session creation failed: token is null ', createSessionData.error);
+                    }
+                } else {
+                    console.log('Session creation failed:', createSessionData.error);
                 }
-            }),
-            headers: authenticityHeader({'Content-Type': 'application/json'})
-        }))  
-        .then(handleErrors)
-        .then(data => {
-            if (data.success) {
-            window.location.href = '/my-diary';
+            } else {
+                console.log('User creation failed:', createUserData.error);
             }
-        })
-        .catch(error => {
-            console.log(error);
-        })          
-    }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    };
 
   return (
     <div className='signupWidget'>
@@ -59,7 +69,7 @@ const SignupWidget = () => {
                     <input type='email' className='form-control' id='email' placeholder='Enter email' />
                 </div>
                 <div className='form-group'>
-                    <label className='form-label' htmlFor='username'>Username</label>
+                '    <label className='form-label' htmlFor='username'>Username</label>
                     <input type='text' className='form-control' id='username' placeholder='Enter username' />
                 </div>
                 <div className='form-group'>
@@ -80,6 +90,6 @@ const SignupWidget = () => {
         </div>
     </div>
   )
-}
+};
 
 export default SignupWidget;

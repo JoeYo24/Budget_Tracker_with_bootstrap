@@ -13,21 +13,14 @@ class User < ApplicationRecord
 
     validates_uniqueness_of :username 
     validates_uniqueness_of :email
-
-    after_validation :hash_password
-
-    def self.authenticate(password) 
-        if BCrypt::Password.new(self.password_digest) === password 
-            return self 
+    
+    def self.authenticate(email, password) 
+        user = find_by(email: email)
+        if user && user.authenticate(password) 
+            user 
         else 
-            return false 
-        end 
-    end
-
-    private 
-
-    def hash_password 
-        self.password = BCrypt::Password.create(password)
+            nil 
+        end
     end
 end
 

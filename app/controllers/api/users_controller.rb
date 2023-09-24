@@ -21,7 +21,6 @@ module Api
           return render json: { error: 'User not authorized to update user' }, status: :unauthorized
         end
       
-        # Check if password is included in user_params
         if user_params.key?(:password)
           if user_params[:password].blank?
             return render json: { error: 'Password can\'t be blank' }, status: :unprocessable_entity

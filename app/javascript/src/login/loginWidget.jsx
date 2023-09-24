@@ -3,29 +3,40 @@ import './login.scss'
 import { safeCredentialsForm, authenticityHeader, handleErrors } from '../utils/fetchHelper';
 
 const LoginWidget = () => {
-
-    const handleClick = (e) => {
+    const handleClick = async (e) => {
         e.preventDefault();
-        fetch('/api/sessions', safeCredentialsForm({
-            method: 'POST',
-            body: JSON.stringify({
-                user: {
-                    email: document.getElementById('email').value, 
-                    password: document.getElementById('password').value
+
+        try {
+            // Create a session after successful login
+            const createSessionResponse = await fetch('/api/sessions', safeCredentialsForm({
+                method: 'POST',
+                body: JSON.stringify({
+                    user: {
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value,
+                    },
+                }),
+                headers: authenticityHeader({ 'Content-Type': 'application/json' }),
+            }));
+
+            const createSessionData = await createSessionResponse.json();
+
+            if (createSessionResponse.ok) {
+                if (createSessionData.token !== null) {
+                    const token = createSessionData.token; 
+                    localStorage.setItem('authToken', token);
+                    // Session creation was successful, redirect to /my-diary
+                    window.location.href = '/my-diary';
+                } else {
+                    console.log('Session creation failed: token is null ', createSessionData.error);
                 }
-            }),
-            headers: authenticityHeader({'Content-Type': 'application/json'})
-        }))
-        .then(handleErrors)
-        .then(data => {
-            if (data.success) {
-                window.location.href = '/my-diary';
+            } else {
+                console.log('Session creation failed:', createSessionData.error);
             }
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    };
 
   return (
     <div className='loginWidget'>

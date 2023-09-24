@@ -2,16 +2,16 @@ module Api
     class SessionsController < ApplicationController
   
       def create
-        @user = User.find_by(email: params[:user][:email])
-  
-        if @user && @user.authenticate(params[:user][:password])
-          session = Session.create(user_id: @user.id, expires_at: Time.now + 1.week) # Set session expiration to 1 week from now
-          render 'api/sessions/create', status: :created
-        else
-          render json: { error: 'Invalid email or password' }, status: :unauthorized
+        user = User.authenticate(params[:user][:email], params[:user][:password])
+
+        if user 
+          session = Session.create(user_id: user.id, expires_at: 1.week.from_now) 
+          render json: { token: session.token }, status: :created 
+        else 
+          render json: { error: 'Invalid email or password' }, status: :unauthorized 
         end
       end
-
+      
       def keep_alive 
         session[:expires_at] = 15.minutes.from_now
         render json: { success: true }, status: :ok
@@ -27,14 +27,14 @@ module Api
         else 
             render json: { authenticated: false }, status: :unauthorized 
         end
-        end
+      end
 
       def destroy
-        session = Session.find_by(token: request.headers['Authorization'].split(' ').last)
+        session = Session.find_by(token: params[:token])
   
         if !session
           return render json: { error: 'Invalid token' }, status: :unauthorized
-        elsif session.expired?
+        elsif session.expires_at <= Time.now
           session.destroy
           render json: { error: 'Session expired' }, status: :unauthorized
         else

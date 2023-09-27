@@ -1,25 +1,159 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './myDiary.scss'
 import Sidebar from './sidebar'
 import Footer from './footer'
 import { VictoryPie } from 'victory'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { authenticityHeader, safeCredentials, token } from '../utils/fetchHelper'
 
 const MyDiary = () => {
-  const salary = 75000
-  const monthlySalary = salary / 12
-  const biWeeklyPay = monthlySalary / 2
-  const needs = 480
-  const wants = 15
-  const savings = monthlySalary - (needs + wants)
-  const totalNeeds = monthlySalary * .5
-  const totalWants = monthlySalary * .3
-  const minimumSavings = monthlySalary * .2
+  const [user, setUser] = useState(null);
+  const [transactions, setTransactions] = useState(null);
+  const [salary, setSalary] = useState(null);
+  const [wants, setWants] = useState(null);
+  const [savings, setSavings] = useState(null);
+  const [needs, setNeeds] = useState(null);
+
+  useEffect(() => {
+    // First, check if the user is authenticated
+    if (!token) { 
+      console.log('User not authenticated');
+      return;
+    }
+
+    fetchUserDetails();
+    fetchTransactions();
+  }, []);
+
+  const monthlySalary = salary / 12;
+  const biWeeklyPay = monthlySalary / 2;
+  const totalNeeds = monthlySalary * 0.5;
+  const totalWants = monthlySalary * 0.3;
+  const minimumSavings = monthlySalary * 0.2;
 
   function addTransaction() {
     console.log('button clicked');
-    window.location.href = '/my-diary/transaction'
+    window.location.href = '/my-diary/transaction';
   }
+
+  function handleDelete(transactionId) {
+    console.log('delete button clicked');
+  
+    const confirmDelete = window.confirm('Are you sure you want to delete this transaction?');
+  
+    if (confirmDelete) {
+      console.log('Delete confirmed');
+  
+      try { 
+        fetch(`api/transactions/${transactionId}`, safeCredentials({
+          method: 'DELETE', 
+          headers: authenticityHeader({ 'Content-Type': 'application/json' }),
+        }))
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Request failed with status ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Response Data:', data);
+            fetchTransactions(); // Fetch transactions after successful deletion
+          })
+          .catch(error => {
+            console.log('Error:', error);
+          });
+      }
+      catch (error) {
+        console.error('Error:', error);
+      }
+    } else {
+      console.log('Delete cancelled');
+    }
+  }
+  
+
+  function fetchUserDetails() {
+    fetch(`/api/sessions/authenticated/${token()}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        ...authenticityHeader(),
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        console.log('Response Status:', response.status);
+        if (!response.ok) {
+          throw new Error('Failed to authenticate');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Response Data:', data);
+
+        if (data.authenticated) {
+          setUser(data.username);
+          setSalary(data.salary_after_tax);
+          console.log('User authenticated:', data.user);
+        } else {
+          console.log('User not authenticated.');
+        }
+      })
+      .catch(error => {
+        console.error('Error checking authentication:', error);
+      });
+  }
+
+  function fetchTransactions() {
+    fetch('/api/transactions', safeCredentials({
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        ...authenticityHeader(),
+        'Content-Type': 'application/json'
+      }
+    }))
+      .then(response => {
+        console.log('Transactions Response Status:', response.status);
+        return response.json();
+      })
+      .then(data => {
+        console.log('Transactions Response Data:', data);
+  
+        if (data.transactions) {
+          setTransactions(data.transactions);
+          console.log('Transactions fetched:', data.transactions);
+  
+          // Initialize totals
+          let totalNeeds = 0;
+          let totalWants = 0;
+          let totalSavings = 0;
+  
+          // Loop through transactions and calculate totals
+          Object.values(data.transactions).forEach(transaction => {
+            if (transaction.transaction_type === 'Need') {
+              totalNeeds += parseFloat(transaction.amount);
+            } else if (transaction.transaction_type === 'Want') {
+              totalWants += parseFloat(transaction.amount);
+            } else if (transaction.transaction_type === 'Savings') {
+              totalSavings += parseFloat(transaction.amount);
+            }
+          });
+  
+          // Set the state for needs, wants, and savings
+          setNeeds(totalNeeds);
+          setWants(totalWants);
+          setSavings(totalSavings);
+
+          console.log('Needs:', totalNeeds);
+          console.log('Wants:', totalWants);
+          console.log('Savings:', totalSavings);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching transactions:', error);
+      });
+  }  
 
   return (
     <div className="myDiary">
@@ -29,7 +163,7 @@ const MyDiary = () => {
       {/* Main Content */}
       <div className='mainContent'>
         <div className='mainContent_header'>
-          <h1>Welcome, User</h1>
+          <h1>Welcome, {user}</h1>
         </div>
         <div className='mainContent_body'>
           <div className='mainContent_body_content'>
@@ -59,48 +193,30 @@ const MyDiary = () => {
                     <tr>
                       <th scope='col'>Date</th>
                       <th scope='col'>Description</th>
-                      <th scope='col'>Amount</th>
+                      <th scope='col'>Amount ($)</th>
                       <th scope='col'>Type</th>
                       <th scope='col'></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th scope='row'>1/1/2021</th>
-                      <td>Paycheck</td>
-                      <td>${biWeeklyPay}</td>
-                      <td>Income</td>
-                      <td>
-                        <button className='btn btn-danger deleteButton'>Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope='row'>1/2/2021</th>
-                      <td>Gas</td>
-                      <td>$30</td>
-                      <td>Need</td>
-                      <td>
-                        <button className='btn btn-danger deleteButton'>Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope='row'>1/3/2021</th>
-                      <td>Food</td>
-                      <td>$450</td>
-                      <td>Need</td>
-                      <td>
-                        <button className='btn btn-danger deleteButton'>Delete</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th scope='row'>1/4/2021</th>
-                      <td>Netflix</td>
-                      <td>$15</td>
-                      <td>Want</td>
-                      <td>
-                        <button className='btn btn-danger deleteButton'>Delete</button>
-                      </td>
-                    </tr>
+                    {transactions && Object.values(transactions).map(transaction => {
+                      return (
+                        <tr key={transaction.id}>
+                          <td>{transaction.date}</td>
+                          <td>{transaction.description}</td>
+                          <td>{transaction.amount}</td>
+                          <td>{transaction.transaction_type}</td>
+                          <td>
+                            <button 
+                              onClick={() => handleDelete(transaction.id)} 
+                              className='btn btn-danger deleteButton'
+                            >
+                                Delete
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -110,9 +226,9 @@ const MyDiary = () => {
                 <h3 className='me-auto ms-auto'>Budget</h3>
               </div>
               <div className='budget_body'>
-                <p className='text-center'>Your monthly salary is ${monthlySalary}</p>
-                <p className='text-center'>The remaining spending you have is ${(totalWants + totalNeeds) - (needs + wants)}</p>
-                <p className='text-center'>The minimum amount you have to save is ${minimumSavings}</p>
+                <p className='text-center'>Your monthly salary is ${monthlySalary.toFixed(2)}</p>
+                <p className='text-center'>The remaining spending you have is ${((totalWants + totalNeeds) - (needs + wants)).toFixed(2)}</p>
+                <p className='text-center'>The minimum amount you have to save is ${minimumSavings.toFixed(2)}</p>
               </div>
             </div>
           </div>

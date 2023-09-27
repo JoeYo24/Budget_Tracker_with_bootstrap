@@ -1,8 +1,44 @@
-import React from 'react'
-import './addTransaction.scss'
-import Sidebar from '../myDiary/sidebar'
+import React, { useEffect } from 'react';
+import './addTransaction.scss';
+import Sidebar from '../myDiary/sidebar';
+import { safeCredentialsForm, authenticityHeader, handleErrors, safeCredentials } from '../utils/fetchHelper';
 
 const AddTransaction = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
+    console.log('Submit clicked');
+  
+    const transaction = {
+      description: document.getElementById('description').value,
+      amount: document.getElementById('amount').value,
+      date: document.getElementById('date').value,
+      transaction_type: document.getElementById('type').value
+    };
+  
+    console.log(transaction);
+  
+    fetch('/api/transactions', safeCredentialsForm({
+      method: 'POST',
+      body: JSON.stringify(transaction),
+      headers: {
+        ...authenticityHeader(),
+        'Content-Type': 'application/json'
+      }
+    }))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Response Data:', data);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+      });
+  };
+  
   return (
     <div>
       <div className='sidebarContainer'>
@@ -17,7 +53,7 @@ const AddTransaction = () => {
           </div>
           <div className='form-group'>
             <label htmlFor='amount'>Amount</label>
-            <input type='number' className='form-control' id='amount' placeholder='Enter amount' />
+            <input type='number' step=".01" className='form-control' id='amount' placeholder='Enter amount' />
           </div>
           <div className='form-group'>
             <label htmlFor='date'>Date</label>
@@ -32,7 +68,7 @@ const AddTransaction = () => {
               <option>Savings</option>
             </select>
           </div>
-          <button type='submit' className='btn submit'>Submit</button>
+          <button onClick={handleClick} type='submit' className='btn submit'>Submit</button>
         </form>
       </div>
     </div>

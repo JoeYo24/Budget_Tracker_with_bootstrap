@@ -10,10 +10,10 @@ Rails.application.routes.draw do
   get '/goals/add' => 'static_pages#add_goal'
 
   namespace :api do
-    resources :users, only: [:create, :update, :destroy]
+    resources :users, only: [:create, :update, :show, :destroy]
     resources :sessions, only: [:create] do  
       collection do 
-        get 'authenticated'
+        get 'authenticated/:token' => 'sessions#authenticated'
       end
     end
     resources :transactions, only: [:create, :index, :destroy] do

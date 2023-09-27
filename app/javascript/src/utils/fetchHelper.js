@@ -25,9 +25,13 @@ export function jsonHeader(options = {}) {
     return Object.assign(options, {
       'X-CSRF-Token': getAuthenticityToken(),
       'X-Requested-With': 'XMLHttpRequest',
+      'Authorization': `Bearer ${token()}`
     });
   }
   
+  export function token() {
+    return localStorage.getItem('authToken');
+  }
   /**
   * Lets fetch include credentials in the request. This includes cookies and other possibly sensitive data.
   * Note: Never use for requests across (untrusted) domains.

@@ -2,17 +2,25 @@ module Api
     class TransactionsController < ApplicationController
         before_action :authorize_user, only: [:index, :create, :destroy]
         before_action :find_transaction, only: [:destroy]
-
-        def index 
-            @transactions = current_session.user.transactions 
-        end 
-
-        def create 
-            @transaction = Transaction.create(transaction_params)
-            render 'api/transactions/create', status: :created
-        rescue ActiveRecord::RecordInvalid => e
-            render json: { error: e.message }, status: :unprocessable_entity
+        
+        def index
+            begin
+              @transactions = current_user.transactions
+              render 'api/transactions/index', status: :ok
+            rescue StandardError => e
+              render json: { error: e.message }, status: :internal_server_error
+            end
         end
+          
+        def create 
+            @transaction = current_user.transactions.build(transaction_params)
+          
+            if @transaction.save
+              render 'api/transactions/create', status: :created
+            else
+              render json: { error: @transaction.errors.full_messages }, status: :unprocessable_entity
+            end
+        end  
 
         def destroy 
             @transaction.destroy
@@ -20,8 +28,8 @@ module Api
         end
 
         def show_by_date 
-            @transactions = current_session.user.transactions.where(date: params[:date])
-            render 'api/transactions/show_by_date', status: :ok'
+            @transactions = current_user.transactions.where(date: params[:date])
+            render 'api/transactions/show_by_date', status: :ok
         end
 
         private
@@ -33,8 +41,9 @@ module Api
         end
 
         def transaction_params
+            amount = params[:transaction][:amount].to_f.round(2)
             params.require(:transaction).permit(:date, :amount, :description, :transaction_type)
-        end
+        end          
     end
 end
 

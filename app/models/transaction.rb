@@ -1,7 +1,7 @@
 class Transaction < ApplicationRecord
     belongs_to :user 
 
-    TRANSACTION_TYPES = %w(income need want savings).freeze 
+    TRANSACTION_TYPES = %w(Income Need Want Savings).freeze 
 
     validates :user_id, presence: true 
     validates :amount, presence: true, numericality: { greater_than: 0 }

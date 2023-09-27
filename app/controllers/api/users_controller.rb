@@ -36,7 +36,12 @@ module Api
         end
       end
       
-  
+      def show 
+        @user = User.find_by(id: params[:id])
+        return render json: { error: 'Cannot find user' }, status: :not_found unless @user
+        render json: @user, status: :ok
+      end
+
       def destroy
         @user = User.find_by(id: params[:id])
         return render json: { error: 'Cannot find user' }, status: :not_found unless @user

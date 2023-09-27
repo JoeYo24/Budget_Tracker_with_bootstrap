@@ -18,10 +18,9 @@ module Api
       end
       
       def authenticated 
-        token = request.headers['Authorization'].split(' ').last 
-        session = Session.find_by(token: token) 
+        session = Session.find_by(token: params[:token]) 
 
-        if session && !session.expired? 
+        if session && session.expires_at > Time.now
             @user = session.user 
             render 'api/sessions/authenticated', status: :ok 
         else 

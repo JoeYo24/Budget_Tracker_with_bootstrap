@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2023_09_14_194704) do
     t.string "description"
     t.decimal "amount"
     t.string "transaction_type"
+    t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_transactions_on_user_id"

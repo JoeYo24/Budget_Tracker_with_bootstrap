@@ -5,7 +5,6 @@ import { safeCredentialsForm, authenticityHeader, handleErrors } from '../utils/
 const LoginWidget = () => {
     const handleClick = async (e) => {
         e.preventDefault();
-
         try {
             // Create a session after successful login
             const createSessionResponse = await fetch('/api/sessions', safeCredentialsForm({

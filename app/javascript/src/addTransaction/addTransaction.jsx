@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import './addTransaction.scss';
 import Sidebar from '../myDiary/sidebar';
 import { safeCredentialsForm, authenticityHeader, handleErrors, safeCredentials } from '../utils/fetchHelper';
 
 const AddTransaction = () => {
+  const [successMessage, setSuccessMessage] = useState(null);
+
   const handleClick = (e) => {
     e.preventDefault();
     console.log('Submit clicked');
@@ -33,6 +35,17 @@ const AddTransaction = () => {
       })
       .then(data => {
         console.log('Response Data:', data);
+
+        // clear form fields after successful submission
+        document.getElementById('description').value = ''; 
+        document.getElementById('amount').value = '';
+        document.getElementById('date').value = '';
+
+        // display success to user 
+        setSuccessMessage('Transaction successfully added!');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 10000);
       })
       .catch(error => {
         console.log('Error:', error);
@@ -46,7 +59,7 @@ const AddTransaction = () => {
       </div>
       <div className='addTransaction'>
         <h1>Add Transaction</h1>
-        <form>
+        <form onSubmit={handleClick}>
           <div className='form-group'>
             <label htmlFor='Description'>Description</label>
             <input type='text' className='form-control' id='description' placeholder='Enter short description' />
@@ -68,8 +81,9 @@ const AddTransaction = () => {
               <option>Savings</option>
             </select>
           </div>
-          <button onClick={handleClick} type='submit' className='btn submit'>Submit</button>
+          <button type='submit' className='btn submit'>Submit</button>
         </form>
+        {successMessage && <div className='success-message'>{successMessage}</div>}
       </div>
     </div>
   )

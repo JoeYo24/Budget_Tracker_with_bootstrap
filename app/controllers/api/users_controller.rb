@@ -17,22 +17,14 @@ module Api
         @user = User.find_by(id: params[:id])
         return render json: { error: 'Cannot find user' }, status: :not_found unless @user
       
-        if @user.id != current_session.user.id
+        if @user.id != current_user.id
           return render json: { error: 'User not authorized to update user' }, status: :unauthorized
         end
       
-        if user_params.key?(:password)
-          if user_params[:password].blank?
-            return render json: { error: 'Password can\'t be blank' }, status: :unprocessable_entity
-          elsif user_params[:password] != user_params[:password_confirmation]
-            return render json: { error: 'Password and password confirmation do not match' }, status: :unprocessable_entity
-          end
-        end
-      
-        if @user.update(user_params)
+        if @user.update(update_user)
           render 'api/users/update', status: :ok
         else
-          render json: { error: 'User could not be updated' }, status: :unprocessable_entity
+          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
         end
       end
       
@@ -47,7 +39,7 @@ module Api
         return render json: { error: 'Cannot find user' }, status: :not_found unless @user
   
         if @user.id != current_session.user.id
-          return render json: { error: 'User not authorized to delete user' }, status: :unauthorized
+          return render json: { errors: 'User not authorized to delete user' }, status: :unauthorized
         end
   
         @user.destroy
@@ -57,7 +49,11 @@ module Api
       private
   
       def user_params 
-        params.require(:user).permit(:email, :username, :password, :password_confirmation, :salary_after_tax)
+        params.require(:user).permit(:email, :username, :password, :salary_after_tax)
+      end
+
+      def update_user 
+        params.require(:user).permit(:email, :username, :salary_after_tax)
       end
     end
   end

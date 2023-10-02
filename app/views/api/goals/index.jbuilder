@@ -5,6 +5,7 @@ json.goals do
             json.description goal.description
             json.amount goal.amount 
             json.target_date goal.target_date 
+            json.progress goal.progress
         end 
     end 
 end

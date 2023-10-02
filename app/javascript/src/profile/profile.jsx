@@ -32,44 +32,6 @@ const Profile = () => {
         e.preventDefault();
       
         console.log('Submit clicked');
-      
-        const profile = {
-          username: document.getElementById('username').value,
-          email: document.getElementById('email').value,
-          password: document.getElementById('password').value,
-          salary_after_tax: document.getElementById('salary_after_taxes').value,
-        };
-      
-        fetch(`/api/users/${id}`, safeCredentialsForm({
-          method: 'PUT',
-          body: JSON.stringify(profile),
-          headers: {
-            ...authenticityHeader(),
-            'Content-Type': 'application/json'
-          }
-        }))
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Request failed with status ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Response Data:', data);
-      
-          document.getElementById('username').value = '';
-          document.getElementById('email').value = '';
-          document.getElementById('password').value = '';
-          document.getElementById('salary_after_taxes').value = '';
-      
-          setSuccessMessage('Profile successfully updated!');
-          setTimeout(() => {
-            setSuccessMessage('');
-          }, 10000);
-        })
-        .catch(error => {
-          console.log('Error:', error);
-        });
     }
       
 

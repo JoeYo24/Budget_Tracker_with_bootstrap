@@ -3,18 +3,26 @@ module Api
         before_action :authorize_user, only: [:index, :create, :destroy]
 
         def index 
-            @goals = current_session.user.goals
+            begin
+                @goals = current_user.goals
+                render 'api/goals/index', status: :ok
+            rescue StandardError => e
+                render json: { error: e.message }, status: :internal_server_error
+            end
         end 
 
         def create 
-            @goal = Goal.create(goal_params)
-            render 'api/goals/create', status: :created 
-        rescue ActiveRecord::RecordInvalid => e 
-            render json: { error: e.message }, status: :unprocessable_entity
+            @goal = current_user.goals.build(goal_params)
+
+            if @goal.save 
+                render 'api/goals/create', status: :created 
+            else
+                render json: { error: @goal.errors.full_messages }, status: :unprocessable_entity
+            end
         end 
 
         def destroy
-            @goal = current_session.user.goals.find_by(id: params[:id])
+            @goal = current_user.goals.find_by(id: params[:id])
           
             if @goal
               @goal.destroy

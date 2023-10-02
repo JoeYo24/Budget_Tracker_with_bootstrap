@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     end
     resources :transactions, only: [:create, :index, :destroy] do
       collection do 
-        get 'show_by_date'
+        get 'transactions/:date' => 'transactions#show_by_date'
       end
     end
     resources :goals, only: [:create, :index, :destroy] 

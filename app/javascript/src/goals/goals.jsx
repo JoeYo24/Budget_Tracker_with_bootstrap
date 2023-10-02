@@ -8,9 +8,6 @@ import { safeCredentials, handleErrors, authenticityHeader, token } from '../uti
 const Goals = () => {
   const [user, setUser] = useState(null);
   const [goals, setGoals] = useState([]);
-  const [progress, setProgress] = useState(null);
-  const [savings, setSavings] = useState(null);
-  const [goalProgress, setGoalProgress] = useState(goals.map(() => 0));
 
 
   useEffect(() => {
@@ -21,7 +18,6 @@ const Goals = () => {
     
     fetchUserDetails();
     fetchGoals();
-    fetchTransactionsBySavings();
   }, []);
   
   async function fetchUserDetails() {
@@ -67,42 +63,6 @@ const Goals = () => {
       console.error('Error:', error);
     }
   }
-  
-  async function fetchTransactionsBySavings() {
-    try {
-      const response = await fetch('/api/transactions', safeCredentials({
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          ...authenticityHeader(),
-          'Content-Type': 'application/json',
-        },
-      }));
-  
-      if (!response.ok) {
-        throw new Error(`Network response was not ok (${response.status})`);
-      }
-  
-      const data = await response.json();
-      console.log('Transactions Data:', data);
-  
-      const transactions = Object.values(data.transactions);
-      console.log('Transactions:', transactions);
-  
-      const savingsTransactions = transactions.filter(transaction => transaction.transaction_type === 'Savings');
-      console.log('Savings Transactions:', savingsTransactions);
-  
-      const savingsArray = savingsTransactions.map(transaction => parseFloat(transaction.amount));
-      console.log('Savings Array:', savingsArray);
-  
-      const totalSavings = savingsArray.reduce((total, amount) => total + amount, 0);
-      console.log('Total Savings:', totalSavings);
-  
-      setSavings(totalSavings);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
 
   function addGoal() {
     console.log('button clicked');
@@ -110,7 +70,6 @@ const Goals = () => {
   }
 
   console.log('Goals:', goals);
-  console.log('Savings:', savings)
 
   return (
     <div className='goals'>

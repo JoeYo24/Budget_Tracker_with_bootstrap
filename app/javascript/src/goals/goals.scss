@@ -16,6 +16,13 @@ body {
     height: 20px;
     background-color: #e4e7cd;
 }
+.progress {
+    height: 20px;
+    background-color: #1a5f24 !important;
+    color: #e4e7cd !important;
+    width: 0%;
+    transition: width 1s ease-in-out !important;
+}
 .sidebarContainer {
     display: flex;
     flex: .2;

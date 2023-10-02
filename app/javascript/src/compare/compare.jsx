@@ -5,10 +5,51 @@ import '../myDiary/sidebar.scss'
 import 'react-dates/initialize';
 import { SingleDatePickerWrapper, SingleDatePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
+import { safeCredentials, handleErrors, authenticityHeader, token } from '../utils/fetchHelper';
 
 const Compare = () => {
     const [date, setDate] = useState(null)
     const [focused, setFocused] = useState(false)
+
+    const handleCompareClick = async () => {
+        console.log('handle compare click');
+        console.log(date);
+      
+        const selectedDate = date ? date.toISOString().split('T')[0] : null; // Format as 'YYYY-MM-DD' or null if no date selected
+      
+        if (selectedDate) {
+          // Make the GET request with the formatted date
+          fetch(`/api/transactions/${selectedDate}`, safeCredentials({
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              ...authenticityHeader(),
+              'Content-Type': 'application/json',
+            },
+          }))
+            .then(handleErrors)
+            .then((response) => {
+                if (!response.ok) {
+                throw new Error(`Network response was not ok (${response.status})`);
+                }
+                return response.text(); // Read the response as text
+            })
+            .then((data) => {
+                console.log('API Response:', data); // Log the response as text
+                // Handle the retrieved transactions
+                try {
+                const jsonData = JSON.parse(data); // Attempt to parse the response as JSON
+                console.log('Transactions:', jsonData.transactions);
+                } catch (error) {
+                console.error('JSON Parsing Error:', error);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        }
+    };
 
   return (
     <div className='compare'>
@@ -29,7 +70,7 @@ const Compare = () => {
                         placeholder="Date"
                         numberOfMonths={1}
                     />
-                    <button className='btn btn-primary'>Compare</button>
+                    <button onClick={handleCompareClick} className='btn btn-primary'>Compare</button>
                     <div className='transactionList rounded'> 
                         <h3>Transactions</h3>
                         <div className='transaction'>

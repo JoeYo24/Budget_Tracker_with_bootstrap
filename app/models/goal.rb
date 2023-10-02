@@ -5,6 +5,7 @@ class Goal < ApplicationRecord
     validates :amount, presence: true, numericality: { greater_than: 0 }
     validates :description, presence: true, length: { maximum: 20 }
     validates :target_date, presence: true
+    validate :target_date_cannot_be_in_the_past
 
     private 
 
@@ -15,7 +16,7 @@ class Goal < ApplicationRecord
     end
 
     def calculate_progress 
-        total_savings = Transaction.where(user_id: self.user_id, transaction_type: "savings").sum(:amount)
+        total_savings = Transaction.where(user_id: self.user_id, transaction_type: "Savings").sum(:amount)
         self.progress = (total_savings / self.amount) * 100
         save 
     end

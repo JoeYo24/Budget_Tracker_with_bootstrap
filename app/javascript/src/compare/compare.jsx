@@ -14,43 +14,40 @@ const Compare = () => {
     const handleCompareClick = async () => {
         console.log('handle compare click');
         console.log(date);
-      
+    
         const selectedDate = date ? date.toISOString().split('T')[0] : null; // Format as 'YYYY-MM-DD' or null if no date selected
-      
+    
         if (selectedDate) {
-          // Make the GET request with the formatted date
-          fetch(`/api/transactions/${selectedDate}`, safeCredentials({
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              ...authenticityHeader(),
-              'Content-Type': 'application/json',
-            },
-          }))
-            .then(handleErrors)
-            .then((response) => {
+            try {
+                const response = await fetch(`/api/transactions/${selectedDate}`, safeCredentials({
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        ...authenticityHeader(),
+                        'Content-Type': 'application/json',
+                    },
+                }));
+    
                 if (!response.ok) {
-                throw new Error(`Network response was not ok (${response.status})`);
+                    throw new Error(`Network response error (${response.status}): ${response.statusText}`);
                 }
-                return response.text(); // Read the response as text
-            })
-            .then((data) => {
-                console.log('API Response:', data); // Log the response as text
-                // Handle the retrieved transactions
+    
+                const data = await response.text();
+                console.log('API Response:', data);
+    
                 try {
-                const jsonData = JSON.parse(data); // Attempt to parse the response as JSON
-                console.log('Transactions:', jsonData.transactions);
+                    const jsonData = JSON.parse(data);
+                    console.log('Transactions:', jsonData.transactions)
+                    const transactions = jsonData.transactions;
                 } catch (error) {
-                console.error('JSON Parsing Error:', error);
+                    console.error('JSON Parsing Error:', error);
                 }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
+            } catch (error) {
+                console.error('An unexpected error occurred:', error.message);
+            }
         }
-    };
-
+    }
+    
   return (
     <div className='compare'>
         <div className='sidebarContainer'>
@@ -73,14 +70,14 @@ const Compare = () => {
                     <button onClick={handleCompareClick} className='btn btn-primary'>Compare</button>
                     <div className='transactionList rounded'> 
                         <h3>Transactions</h3>
-                        <div className='transaction'>
-                            <p>Transaction 1</p>
-                            <p>$1,234</p>
-                        </div>
-                        <div className='transaction'>
-                            <p>Transaction 2</p>
-                            <p>$1,234</p>
-                        </div>
+                        {transactions.map(transaction => {
+                            return (
+                                <div key={transaction.id} className='transaction'>
+                                    <p>{transaction.description}</p>
+                                    <p>{transaction.amount}</p>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
 

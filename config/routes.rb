@@ -16,11 +16,7 @@ Rails.application.routes.draw do
         get 'authenticated/:token' => 'sessions#authenticated'
       end
     end
-    resources :transactions, only: [:create, :index, :destroy] do
-      collection do 
-        get 'transactions/:date' => 'transactions#show_by_date'
-      end
-    end
+    resources :transactions, only: [:create, :index, :destroy] 
     resources :goals, only: [:create, :index, :destroy] 
     resources :monthly_comparisons, only: [:index] do 
       member do 
@@ -28,6 +24,8 @@ Rails.application.routes.draw do
       end
     end
 
+    get '/transactions/:date' => 'transactions#show_by_date'
+    
     delete '/sessions/:token' => 'sessions#destroy'
   end 
   

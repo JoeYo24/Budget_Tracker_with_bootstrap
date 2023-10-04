@@ -56,7 +56,6 @@ module Api
           transaction_type: 'Savings',
           date: month..end_of_month
         )
-  
         # Calculate and update savings comparisons for the current month
         total_savings = savings_transactions.sum(:amount)
   

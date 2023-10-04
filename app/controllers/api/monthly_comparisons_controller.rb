@@ -42,6 +42,7 @@ module Api
     private
 
     def find_monthly_comparison
+      puts "User Id: #{current_user.id}"
       @monthly_comparison = current_user.monthly_comparisons.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: { error: 'Monthly comparison not found' }, status: :not_found

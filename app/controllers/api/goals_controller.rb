@@ -35,7 +35,7 @@ module Api
         private 
 
         def goal_params 
-            params.require(:goal).permit(:description, :amount, :target_date)
+            params.require(:goal).permit(:description, :amount)
         end
     end
 end

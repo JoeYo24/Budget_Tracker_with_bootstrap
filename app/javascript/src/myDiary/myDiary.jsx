@@ -13,6 +13,9 @@ const MyDiary = () => {
   const [wants, setWants] = useState(null);
   const [savings, setSavings] = useState(null);
   const [needs, setNeeds] = useState(null);
+  let totalWants = 0;
+  let totalSavings = 0;
+  let totalNeeds = 0;
 
   useEffect(() => {
     // First, check if the user is authenticated
@@ -25,11 +28,15 @@ const MyDiary = () => {
     fetchTransactions();
   }, []);
 
-  const monthlySalary = salary / 12;
-  const biWeeklyPay = monthlySalary / 2;
-  const totalNeeds = monthlySalary * 0.5;
-  const totalWants = monthlySalary * 0.3;
-  const minimumSavings = monthlySalary * 0.2;
+  const monthlySalary = (salary / 12).toFixed(2);
+  const needsGoal = (salary * 0.5).toFixed(2);
+  const wantsGoal = (salary * 0.3).toFixed(2);
+  const minimumSavings = (salary * 0.2).toFixed(2);
+  
+  console.log('Needs Goal:', needsGoal);
+  console.log('Wants Goal:', wantsGoal);
+  console.log('Minimum Savings:', minimumSavings);
+  
 
   function addTransaction() {
     console.log('button clicked');
@@ -123,12 +130,7 @@ const MyDiary = () => {
         if (data.transactions) {
           setTransactions(data.transactions);
           console.log('Transactions fetched:', data.transactions);
-  
-          // Initialize totals
-          let totalNeeds = 0;
-          let totalWants = 0;
-          let totalSavings = 0;
-  
+ 
           // Loop through transactions and calculate totals
           Object.values(data.transactions).forEach(transaction => {
             if (transaction.transaction_type === 'Need') {
@@ -173,11 +175,14 @@ const MyDiary = () => {
                 className='img-responsive'
                 data={[
                   { x: "Needs", y: needs },
+                  { x: "Needs Goal", y: needsGoal - needs},
                   { x: "Wants", y: wants },
-                  { x: "Savings", y: savings }
+                  { x: "Wants Goal", y: wantsGoal - wants },
+                  { x: "Savings", y: savings },
+                  { x: "Savings Goal", y: minimumSavings - savings }
                 ]}
-                colorScale={["#398632", "#1A4B04", "#B0D78D"]}
-                style={{ labels: { fill: "#d5eed5", fontSize: 20, fontWeight: "bold", fontFamily: "Montserrat"}}}
+                colorScale={["#398632", "#398657", "#1A4B04", "#2E4B1A", "#B0D78D", "B0B48D"]}
+                style={{ labels: { fill: "#d5eed5", fontSize: 15, fontWeight: "bold", fontFamily: "Montserrat"}}}
               />
             </div>
             <div className='transactions rounded'>
@@ -226,9 +231,9 @@ const MyDiary = () => {
                 <h3 className='me-auto ms-auto'>Budget</h3>
               </div>
               <div className='budget_body'>
-                <p className='text-center'>Your monthly salary is ${monthlySalary.toFixed(2)}</p>
-                <p className='text-center'>The remaining spending you have is ${((totalWants + totalNeeds) - (needs + wants)).toFixed(2)}</p>
-                <p className='text-center'>The minimum amount you have to save is ${minimumSavings.toFixed(2)}</p>
+                <p className='text-center'>Your monthly salary is ${monthlySalary}</p>
+                <p className='text-center'>The remaining spending you have for this month is ${((monthlySalary - (monthlySalary * .2)) - (needs + wants)).toFixed(2)}</p>
+                <p className='text-center'>The minimum amount you have to save this year is ${minimumSavings}</p>
               </div>
             </div>
           </div>

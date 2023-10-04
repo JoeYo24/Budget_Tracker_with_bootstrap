@@ -18,11 +18,7 @@ Rails.application.routes.draw do
     end
     resources :transactions, only: [:create, :index, :destroy] 
     resources :goals, only: [:create, :index, :destroy] 
-    resources :monthly_comparisons, only: [:index] do 
-      member do 
-        post 'calculate_and_update_savings_by_month'
-      end
-    end
+    resources :monthly_comparisons, only: [:index, :show, :update, :destroy]
 
     get '/transactions/:date' => 'transactions#show_by_date'
     

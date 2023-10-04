@@ -14,7 +14,6 @@ const AddGoal = () => {
     const goal = {
       description: document.getElementById('description').value, 
       amount: document.getElementById('amount').value,
-      target_date: document.getElementById('targetDate').value,
     }
 
     fetch('/api/goals', safeCredentialsForm({
@@ -41,7 +40,6 @@ const AddGoal = () => {
       // Handle success
       document.getElementById('description').value = '';
       document.getElementById('amount').value = '';
-      document.getElementById('targetDate').value = '';
 
       setSuccessMessage('Goal successfully added!');
       setTimeout(() => {
@@ -69,10 +67,6 @@ const AddGoal = () => {
           <div className='form-group'>
             <label htmlFor='amount'>Amount</label>
             <input type='number' className='form-control' id='amount' placeholder='Enter an amount' />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='targetDate'>Target Date</label>
-            <input type='date' className='form-control' id='targetDate' placeholder='When do you want to complete it?' />
           </div>
           <button type='submit' className='btn submit'>Submit</button>
         </form>

@@ -88,6 +88,7 @@ const Goals = () => {
             <div key={index} className='goalItem'>
               <p>{goal.description}</p>
               <p>{goal.amount}</p>
+              <p>{goal.target_date}</p>
               <div className='progressBar'>
                 <div className='progress' style={{ width: `${goal.progress}%` }}>
                   {goal.progress}%

@@ -12,7 +12,7 @@ body {
     margin-right: auto; 
 }
 .progressBar {
-    width: 350%;
+    width: 100%;
     height: 20px;
     background-color: #e4e7cd;
 }
@@ -20,7 +20,7 @@ body {
     height: 20px;
     background-color: #1a5f24 !important;
     color: #e4e7cd !important;
-    width: 0%;
+    width: 0%;  
     transition: width 1s ease-in-out !important;
 }
 .sidebarContainer {

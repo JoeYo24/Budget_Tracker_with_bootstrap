@@ -14,22 +14,40 @@ class Transaction < ApplicationRecord
   
     private 
   
-    def update_goals 
-        user = self.user 
-        goal = user.goals.first 
-
-        if goal && self.transaction_type == "Savings"
-            savings_to_apply = self.amount 
-            progress = [(savings_to_apply / goal.amount * 100), 100].min 
-            puts 'Progress: ' + progress.to_s + '%'
-            puts 'Goal: ' + goal.amount.to_s
-            goal.update(progress: progress) 
-            puts 'Goal Progress: ' + goal.progress.to_s + '%'
-            if progress >= 100 
-                goal.destroy
-            end
+    def update_goals
+      user = self.user
+      remaining_savings = self.amount
+    
+      while remaining_savings.positive?
+        goal = user.goals.first
+    
+        break unless goal || self.transaction_type == "Savings"
+    
+        if goal
+          savings_to_apply = [remaining_savings, goal.amount].min
+          progress = [(savings_to_apply / goal.amount.to_f * 100), 100].min
+    
+          puts 'Progress: ' + progress.to_s + '%'
+          puts 'Goal: ' + goal.amount.to_s
+          puts 'Remaining Savings: ' + remaining_savings.to_s
+    
+          goal.update(progress: progress)
+    
+          puts 'Goal Progress: ' + goal.progress.to_s + '%'
+    
+          if progress >= 100
+            remaining_savings -= savings_to_apply
+            goal.destroy
+          else
+            break
+          end
+        else
+          break
         end
+      end
     end
+        
+    
           
     def date_cannot_be_in_the_future
       if date.present? && date > Date.today

@@ -204,24 +204,28 @@ const MyDiary = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {transactions && Object.values(transactions).map(transaction => {
-                      return (
-                        <tr key={transaction.id}>
-                          <td>{transaction.date}</td>
-                          <td>{transaction.description}</td>
-                          <td>{transaction.amount}</td>
-                          <td>{transaction.transaction_type}</td>
-                          <td>
-                            <button 
-                              onClick={() => handleDelete(transaction.id)} 
-                              className='btn btn-danger deleteButton'
-                            >
+                  {transactions &&
+                    Object.values(transactions)
+                      .reverse() // Reverse the order so the most recent transactions are at the top
+                      .slice(0, 15) // Only show the 15 most recent transactions
+                      .map((transaction) => {
+                        return (
+                          <tr key={transaction.id}>
+                            <td>{transaction.date}</td>
+                            <td>{transaction.description}</td>
+                            <td>{transaction.amount}</td>
+                            <td>{transaction.transaction_type}</td>
+                            <td>
+                              <button
+                                onClick={() => handleDelete(transaction.id)}
+                                className='btn btn-danger deleteButton'
+                              >
                                 Delete
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })}
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                  })}
                   </tbody>
                 </table>
               </div>

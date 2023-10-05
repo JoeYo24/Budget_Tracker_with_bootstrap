@@ -80,16 +80,24 @@ const Compare = () => {
     }
 
     const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const lastMonth = (currentMonth - 1 + 12) % 12;
+    const currentMonth = (currentDate.getMonth() + 1) % 12;
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     console.log('Current Date: ', currentDate);
 
+    // Get the current month and last month as strings in the format "YYYY-MM-01"
+    const currentMonthStr = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-01`;
+    const lastMonthStr = `${currentDate.getFullYear()}-${(currentMonth - 1).toString().padStart(2, '0')}-01`;
+
     const thisMonthComparison = monthlyComparison.find(comparison => 
-        new Date(comparison.month).getMonth() === currentMonth
+        comparison.month === currentMonthStr
     );
+
     const lastMonthComparison = monthlyComparison.find(comparison => 
-        new Date(comparison.month).getMonth() === lastMonth
+        comparison.month === lastMonthStr
     );
+
+
+    console.log('Monthly Comparison: ', monthlyComparison);
     console.log('This Month Comparison: ', thisMonthComparison);
     console.log('Last Month Comparison: ', lastMonthComparison);
     console.log('Current Month: ', currentMonth);

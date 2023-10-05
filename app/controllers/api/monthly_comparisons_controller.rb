@@ -43,23 +43,26 @@ module Api
 
     def find_monthly_comparison
       puts "User Id: #{current_user.id}"
-      # Attempt to find the monthly comparison
-      @monthly_comparison = current_user.monthly_comparisons.find_or_initialize_by(month: params[:month])
+      @monthly_comparisons = current_user.monthly_comparisons.to_a
     
-      # Check if the record is a new, unsaved one (i.e., not found in the database)
-      if @monthly_comparison.new_record?
-        # Initialize default values, e.g., savings set to 0
-        @monthly_comparison.savings = 0
+      # Ensure there are 12 monthly comparisons, one for each month
+      current_month = Date.today.beginning_of_month
+      (0..11).each do |i|
+        target_month = current_month - i.months
+        existing_comparison = @monthly_comparisons.find { |comparison| comparison.month == target_month }
+    
+        # If the comparison for the target month doesn't exist, create it
+        if existing_comparison.nil?
+          new_comparison = current_user.monthly_comparisons.build(month: target_month, savings: 0)
+          new_comparison.save
+          @monthly_comparisons << new_comparison
+        end
       end
-    
-      # Save the record, whether it's newly created or not
-      @monthly_comparison.save
     
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Monthly comparison not found' }, status: :not_found
     end
     
-
     def monthly_comparison_params
       params.require(:monthly_comparison).permit(:month, :savings)
     end

@@ -11,39 +11,34 @@ const Compare = () => {
     const [date, setDate] = useState(null);
     const [focused, setFocused] = useState(false);
     const [transactions, setTransactions] = useState([]);
-    const [monthlyComparison, setMonthlyComparison] = useState(null);
+    const [monthlyComparison, setMonthlyComparison] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchMonthlyComparison();
-            setMonthlyComparison(data);
+            try {
+                const response = await fetch('/api/monthly_comparisons', safeCredentials({
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        ...authenticityHeader(),
+                        'Content-Type': 'application/json',
+                    },
+                }));
+
+                if (!response.ok) {
+                    throw new Error(`Network response error (${response.status}): ${response.statusText}`);
+                }
+
+                const data = await response.json(); 
+                console.log('Response Data: ', data); 
+                setMonthlyComparison(data.monthly_comparisons);
+            } catch (error) {
+                console.error('An unexpected error occurred: ', error.message);
+            }
         }
 
         fetchData(); 
     }, [])
-
-    const fetchMonthlyComparison = async () => {
-        try {
-            const response = await fetch('/api/monthly_comparisons', safeCredentials({
-                method: 'GET',
-                'credentials': 'include',
-                headers: {
-                    ...authenticityHeader(),
-                    'Content-Type': 'application/json',
-                },
-            }))
-            
-            if (!response.ok) {
-                throw new Error(`Network response error (${response.status}): ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('An unexpected error occurred:', error.message);
-            return null;
-        }
-    };
 
     const handleCompareClick = async () => {
         console.log('handle compare click');
@@ -84,6 +79,22 @@ const Compare = () => {
         }
     }
 
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const lastMonth = (currentMonth - 1 + 12) % 12;
+    console.log('Current Date: ', currentDate);
+
+    const thisMonthComparison = monthlyComparison.find(comparison => 
+        new Date(comparison.month).getMonth() === currentMonth
+    );
+    const lastMonthComparison = monthlyComparison.find(comparison => 
+        new Date(comparison.month).getMonth() === lastMonth
+    );
+    console.log('This Month Comparison: ', thisMonthComparison);
+    console.log('Last Month Comparison: ', lastMonthComparison);
+    console.log('Current Month: ', currentMonth);
+    console.log('Last Month: ', lastMonth);
+
     return (
         <div className='compare'>
             <div className='sidebarContainer'>
@@ -118,8 +129,8 @@ const Compare = () => {
 
                     <div className='monthlyComparison col-12 col-lg-6'>
                         <h3>Monthly Comparison</h3>
-                        <p>Your savings last month was $1,456</p>
-                        <p>Your savings this month is $1,234</p>
+                        <p>Your savings last month was ${lastMonthComparison ? lastMonthComparison.savings : 0}</p>
+                        <p>Your savings this month is ${thisMonthComparison ? thisMonthComparison.savings : 0}</p>
                     </div>
                 </div>
             </div>

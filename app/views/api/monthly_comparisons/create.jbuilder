@@ -1,0 +1,1 @@
+json.extract! @monthly_comparison, :id, :month, :savings

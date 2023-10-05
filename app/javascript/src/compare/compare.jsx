@@ -137,8 +137,14 @@ const Compare = () => {
 
                     <div className='monthlyComparison col-12 col-lg-6'>
                         <h3>Monthly Comparison</h3>
-                        <p>Your savings last month was ${lastMonthComparison ? lastMonthComparison.savings : 0}</p>
-                        <p>Your savings this month is ${thisMonthComparison ? thisMonthComparison.savings : 0}</p>
+                            {monthlyComparison.length === 0 ? (
+                                <p>There are no monthly savings to compare.</p>
+                            ) : (
+                            <>
+                                <p>Your savings last month was ${lastMonthComparison ? lastMonthComparison.savings : 0}</p>
+                                <p>Your savings this month is ${thisMonthComparison ? thisMonthComparison.savings : 0}</p>
+                            </>
+                            )}
                     </div>
                 </div>
             </div>

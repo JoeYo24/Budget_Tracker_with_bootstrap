@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get '/goals' => 'static_pages#goals'
   get '/my-diary/transaction' => 'static_pages#add_transaction'
   get '/goals/add' => 'static_pages#add_goal'
+  get '/help' => 'static_pages#help'
 
   namespace :api do
     resources :users, only: [:create, :update, :show, :destroy]

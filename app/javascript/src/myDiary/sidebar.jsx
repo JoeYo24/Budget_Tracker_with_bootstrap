@@ -6,6 +6,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HelpIcon from '@mui/icons-material/Help';
 import DollarDiaryLogo from '../utils/images/DollarDiaryLogo.png'
 import { safeCredentialsForm, authenticityHeader, handleErrors, safeCredentials } from '../utils/fetchHelper';
 
@@ -57,6 +58,7 @@ const Sidebar = () => {
       <SidebarOptions onClick={() => handleClick('/profile')} active={window.location.pathname === '/profile'} Icon={AccountCircleIcon} text='Profile' />
       <SidebarOptions onClick={() => handleClick('/goals')} active={window.location.pathname === '/goals'} Icon={CheckCircleOutlineIcon} text='Goals' />
       <SidebarOptions onClick={() => handleClick('/compare')} active={window.location.pathname === '/compare'} Icon={CalendarMonthIcon} text='Compare' />
+      <SidebarOptions onClick={() => handleClick('/help')} active={window.location.pathname === '/help'} Icon={HelpIcon} text='Help' />
       <SidebarOptions onClick={handleLogout} Icon={LogoutIcon} text='Logout' />
     </div>
   )

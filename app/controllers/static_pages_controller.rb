@@ -17,4 +17,6 @@ class StaticPagesController < ApplicationController
   end
   def add_goal
   end
+  def help 
+  end
 end

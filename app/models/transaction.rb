@@ -25,17 +25,21 @@ class Transaction < ApplicationRecord
     
         if goal
           savings_to_apply = [remaining_savings, goal.amount].min
-          progress = [(savings_to_apply / goal.amount.to_f * 100), 100].min
+          progress_to_apply = [(savings_to_apply / goal.amount.to_f * 100), 100].min
     
-          puts 'Progress: ' + progress.to_s + '%'
+          puts 'Progress to Apply: ' + progress_to_apply.to_s + '%'
           puts 'Goal: ' + goal.amount.to_s
           puts 'Remaining Savings: ' + remaining_savings.to_s
     
-          goal.update(progress: progress)
+          # Add progress_to_apply to the current progress
+          new_progress = goal.progress + progress_to_apply
     
-          puts 'Goal Progress: ' + goal.progress.to_s + '%'
+          puts 'New Goal Progress: ' + new_progress.to_s + '%'
     
-          if progress >= 100
+          # Update the goal's progress
+          goal.update(progress: new_progress)
+    
+          if new_progress >= 100
             remaining_savings -= savings_to_apply
             goal.destroy
           else
@@ -46,9 +50,7 @@ class Transaction < ApplicationRecord
         end
       end
     end
-        
-    
-          
+            
     def date_cannot_be_in_the_future
       if date.present? && date > Date.today
         errors.add(:date, "can't be in the future")

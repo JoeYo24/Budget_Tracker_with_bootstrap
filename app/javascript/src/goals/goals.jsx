@@ -9,7 +9,6 @@ const Goals = () => {
   const [user, setUser] = useState(null);
   const [goals, setGoals] = useState([]);
 
-
   useEffect(() => {
     if (!token) {
       console.log('User not authenticated');
@@ -69,6 +68,13 @@ const Goals = () => {
     window.location.href = '/goals/add';
   }
 
+  function formatTargetDate(targetDate) {
+    const date = new Date(targetDate);
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${month}-${year}`;
+  }
+
   console.log('Goals:', goals);
 
   return (
@@ -84,11 +90,23 @@ const Goals = () => {
           </button>
         </div>
         <div className='goal-list'>
+          {goals.length === 0 && (
+            <div>
+              <p>You don't have any goals yet. Create a new goal to get started.</p>
+            </div>
+          )}
+
+          {goals.every(goal => goal.progress >= 100) && (
+            <div>
+              <p>If you already had goals. Congratulations! You've completed all your goals.</p>
+            </div>
+          )}
+
           {goals.map((goal, index) => (
             <div key={index} className='goalItem'>
               <p>{goal.description}</p>
               <p>Total Amount: {goal.amount}</p>
-              <p>Estimated Completion Date: {goal.target_date}</p>
+              <p>Estimated Completion Date: {formatTargetDate(goal.target_date)}</p>
               <div className='progressBar'>
                 <div className='progress' style={{ width: `${goal.progress}%` }}>
                   {goal.progress}%
@@ -103,3 +121,4 @@ const Goals = () => {
 };
 
 export default Goals;
+

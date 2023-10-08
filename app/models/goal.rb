@@ -6,7 +6,6 @@ class Goal < ApplicationRecord
   validates :description, presence: true, length: { maximum: 20 }
   validate :target_date_cannot_be_in_the_past
 
-  after_create :calculate_progress 
   after_create :estimate_target_date
 
   def estimate_target_date
@@ -29,15 +28,22 @@ class Goal < ApplicationRecord
         target_date = Date.today + months_needed.months
         puts "Target Date: #{target_date}"
   
-        # Return the calculated target_date as a value without saving it
-        target_date
-      else
-        puts "Monthly estimated savings is zero or negative. Cannot calculate target date."
-        nil
+        # Check if there are any previous goals created
+        previous_goals = user.goals.where('created_at < ?', self.created_at)
+  
+        if previous_goals.any?
+          # Find the most recent previous goal
+          most_recent_previous_goal = previous_goals.order(created_at: :desc).first
+  
+          # Adjust the target date based on the most recent previous goal's target date
+          if most_recent_previous_goal && most_recent_previous_goal.target_date
+            target_date = [target_date, most_recent_previous_goal.target_date].max
+          end
+        end
+  
+        # Return the calculated target_date as a value
+        self.update(target_date: target_date)
       end
-    else
-      puts "User salary is zero or negative. Cannot calculate target date."
-      nil
     end
   end
   

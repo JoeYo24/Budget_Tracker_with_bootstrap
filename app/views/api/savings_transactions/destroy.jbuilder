@@ -1,0 +1,1 @@
+render json: { message: 'Savings transaction successfully destroyed' }, status: :ok

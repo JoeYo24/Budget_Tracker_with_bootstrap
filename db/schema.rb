@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_14_194704) do
+ActiveRecord::Schema.define(version: 2023_10_09_234541) do
 
   create_table "goals", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -32,6 +32,19 @@ ActiveRecord::Schema.define(version: 2023_09_14_194704) do
     t.index ["user_id"], name: "index_monthly_comparisons_on_user_id"
   end
 
+  create_table "savings_transactions", force: :cascade do |t|
+    t.integer "user_id"
+    t.decimal "amount", precision: 10, scale: 2
+    t.string "description"
+    t.date "date"
+    t.integer "goal_id"
+    t.boolean "applied", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["goal_id"], name: "index_savings_transactions_on_goal_id"
+    t.index ["user_id"], name: "index_savings_transactions_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.string "token"
     t.integer "user_id"
@@ -49,6 +62,7 @@ ActiveRecord::Schema.define(version: 2023_09_14_194704) do
     t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "goal_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
@@ -59,10 +73,13 @@ ActiveRecord::Schema.define(version: 2023_09_14_194704) do
     t.integer "salary_after_tax", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "bank_savings", precision: 10, scale: 2, default: "0.0"
   end
 
   add_foreign_key "goals", "users"
   add_foreign_key "monthly_comparisons", "users"
+  add_foreign_key "savings_transactions", "goals"
+  add_foreign_key "savings_transactions", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "transactions", "users"
 end

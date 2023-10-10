@@ -1,5 +1,6 @@
 class Goal < ApplicationRecord
   belongs_to :user 
+  has_many :savings_transactions, dependent: :nullify
 
   validates :user_id, presence: true 
   validates :amount, presence: true, numericality: { greater_than: 0 }

@@ -16,9 +16,31 @@ module Api
       # POST /api/transactions
       def create
         @transaction = current_user.transactions.build(transaction_params)
-  
+
         if @transaction.save
-          # Calculate and update savings by month when a new transaction is created
+          if params[:transaction_type] == 'Savings'
+            if params[:goal_id].present?
+              goal = current_user.goals.find(params[:goal_id])
+
+              savings_transaction = SavingsTransaction.create(
+                user_id: current_user.id,
+                amount: @transaction.amount,
+                description: @transaction.description,
+                date: @transaction.date,
+                goal_id: goal.id
+              )
+              
+              if savings_transaction.persisted?
+                puts "SavingsTransaction created successfully. ID: #{savings_transaction.id}"
+              else
+                puts "Failed to create SavingsTransaction. Errors: #{savings_transaction.errors.full_messages.join(', ')}"
+              end
+              
+            else
+              amount = @transaction.amount
+              current_user.update(bank_savings: current_user.bank_savings + amount)
+            end
+          end
           calculate_and_update_savings_by_month
           render 'api/transactions/create', status: :created
         else
@@ -62,10 +84,9 @@ module Api
         monthly_comparison = user.monthly_comparisons.find_or_initialize_by(month: month)
         monthly_comparison.update(savings: total_savings)
       end
-  
+        
       def transaction_params
-        params.require(:transaction).permit(:date, :amount, :description, :transaction_type)
+        params.require(:transaction).permit(:date, :amount, :description, :transaction_type, :goal_id)
       end
     end
   end
-  

@@ -5,6 +5,7 @@ class User < ApplicationRecord
     has_many :goals, dependent: :destroy 
     has_many :monthly_comparisons, dependent: :destroy
     has_many :sessions 
+    has_many :savings_transactions, dependent: :destroy
 
     validates :username, presence: true, uniqueness: true, on: :create 
     validates :password, presence: true, length: { minimum: 8 }, on: :create

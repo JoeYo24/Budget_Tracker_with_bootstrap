@@ -8,6 +8,7 @@ import { safeCredentials, handleErrors, authenticityHeader, token } from '../uti
 const Goals = () => {
   const [user, setUser] = useState(null);
   const [goals, setGoals] = useState([]);
+  const [savingsTransactions, setSavingsTransactions] = useState([]);
 
   useEffect(() => {
     if (!token) {
@@ -17,6 +18,7 @@ const Goals = () => {
     
     fetchUserDetails();
     fetchGoals();
+    fetchSavingsTransactions();
   }, []);
   
   async function fetchUserDetails() {
@@ -58,8 +60,38 @@ const Goals = () => {
       const data = await response.json();
       const goalsArray = Object.values(data.goals);
       setGoals(goalsArray);
+
+      const goalsIds = goalsArray.map(goal => goal.id);
+      console.log('Goals IDs:', goalsIds);
+
+      updateGoals(goalsIds);
     } catch (error) {
       console.error('Error:', error);
+    }
+  }
+
+  async function fetchSavingsTransactions() {
+    try {
+      const response = await fetch(`/api/savings_transactions`, safeCredentials({
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          ...authenticityHeader(),
+          'Content-Type': 'application/json',
+        },
+      }));
+  
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse the error response
+        throw new Error(`Network response was not ok (${response.status}): ${errorData.error || 'Unknown error'}`);
+      }
+  
+      const data = await response.json();
+      const savingsTransactionsArray = Object.values(data.savings_transactions);
+      setSavingsTransactions(savingsTransactionsArray);
+      console.log('Savings Transactions:', savingsTransactionsArray);
+    } catch (error) {
+      console.error('Error:', error.message);
     }
   }
 

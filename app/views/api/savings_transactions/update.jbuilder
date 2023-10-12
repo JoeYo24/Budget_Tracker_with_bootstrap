@@ -1,1 +1,1 @@
-json.extract! @savings_transaction, :id, :date, :amount, :description, :goal_id
+json.extract! @savings_transaction, :id, :date, :amount, :description, :goal_id, :applied, :transaction_id

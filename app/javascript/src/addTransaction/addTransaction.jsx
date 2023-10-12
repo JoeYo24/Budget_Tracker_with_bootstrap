@@ -72,7 +72,7 @@ const AddTransaction = () => {
         document.getElementById('amount').value = '';
         document.getElementById('date').value = '';
         document.getElementById('type').value = 'Income';
-        document.getElementById('goal').value = 'None';
+        document.getElementById('goal').value = '';
 
         // Display success message to the user
         setSuccessMessage('Transaction successfully added!');

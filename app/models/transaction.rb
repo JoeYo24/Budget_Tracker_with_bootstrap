@@ -1,18 +1,40 @@
 class Transaction < ApplicationRecord
-    belongs_to :user 
+    belongs_to :user
     belongs_to :goal, optional: true
-  
-    TRANSACTION_TYPES = %w(Income Need Want Savings).freeze 
-  
-    validates :user_id, presence: true 
+    belongs_to :monthly_comparison, optional: true
+    has_one :savings_transaction, dependent: :destroy
+
+    after_destroy :update_monthly_comparisons_savings
+    after_destroy :update_goal_progress
+
+    TRANSACTION_TYPES = %w(Income Need Want Savings).freeze
+
+    validates :user_id, presence: true
     validates :amount, presence: true, numericality: { greater_than: 0 }
-    validates :transaction_type, presence: true, inclusion: { in: TRANSACTION_TYPES } 
+    validates :transaction_type, presence: true, inclusion: { in: TRANSACTION_TYPES }
     validates :date, presence: true
     validates :description, presence: true, length: { maximum: 20 }
     validate :date_cannot_be_in_the_future
-  
-    private 
-            
+
+    private
+
+    def update_monthly_comparisons_savings
+      #Find the associated monthly record
+      monthly_comparison = self.monthly_comparison
+      return unless monthly_comparison
+
+      #Calculate and set the new savings amount
+      new_savings = monthly_comparison.transactions.sum(:amount)
+      monthly_comparison.update(savings: new_savings)
+    end
+
+    def update_goal_progress
+      if goal && goal_id && savings_transaction.applied == true
+        updated_progress = goal.progress - (amount / goal.amount) * 100
+        goal.update(progress: updated_progress)
+      end
+    end
+
     def date_cannot_be_in_the_future
       if date.present? && date > Date.today
         errors.add(:date, "can't be in the future")

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_09_234541) do
+ActiveRecord::Schema.define(version: 2023_10_10_211438) do
 
   create_table "goals", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -41,7 +41,9 @@ ActiveRecord::Schema.define(version: 2023_10_09_234541) do
     t.boolean "applied", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "transaction_id", null: false
     t.index ["goal_id"], name: "index_savings_transactions_on_goal_id"
+    t.index ["transaction_id"], name: "index_savings_transactions_on_transaction_id"
     t.index ["user_id"], name: "index_savings_transactions_on_user_id"
   end
 
@@ -79,6 +81,7 @@ ActiveRecord::Schema.define(version: 2023_10_09_234541) do
   add_foreign_key "goals", "users"
   add_foreign_key "monthly_comparisons", "users"
   add_foreign_key "savings_transactions", "goals"
+  add_foreign_key "savings_transactions", "transactions"
   add_foreign_key "savings_transactions", "users"
   add_foreign_key "sessions", "users"
   add_foreign_key "transactions", "users"

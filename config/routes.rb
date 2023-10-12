@@ -12,19 +12,22 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :users, only: [:create, :update, :show, :destroy]
-    resources :sessions, only: [:create] do  
-      collection do 
+    resources :sessions, only: [:create] do
+      collection do
         get 'authenticated/:token' => 'sessions#authenticated'
       end
     end
-    resources :transactions, only: [:create, :index, :destroy] 
-    resources :goals, only: [:create, :index, :destroy] 
+    resources :transactions, only: [:create, :index, :destroy]
+    resources :goals, only: [:create, :index, :destroy]
     resources :monthly_comparisons, only: [:index, :show, :update, :destroy]
+    resources :savings_transactions, only: [:create, :update, :index, :destroy]
 
     get '/transactions/:date' => 'transactions#show_by_date'
-    
+
     delete '/sessions/:token' => 'sessions#destroy'
-  end 
-  
+
+    put '/goals/:id' => 'goals#update'
+  end
+
   get '*path' => redirect('/')
 end

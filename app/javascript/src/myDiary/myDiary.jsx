@@ -13,6 +13,7 @@ const MyDiary = () => {
   const [wants, setWants] = useState(null);
   const [savings, setSavings] = useState(null);
   const [needs, setNeeds] = useState(null);
+  const [bankSavings, setBankSavings] = useState(null);
   let totalWants = 0;
   let totalSavings = 0;
   let totalNeeds = 0;
@@ -101,6 +102,7 @@ const MyDiary = () => {
         if (data.authenticated) {
           setUser(data.username);
           setSalary(data.salary_after_tax);
+          setBankSavings(data.bank_savings);
           console.log('User authenticated:', data.user);
         } else {
           console.log('User not authenticated.');
@@ -238,6 +240,7 @@ const MyDiary = () => {
                 <p className='text-center'>Your monthly salary is ${monthlySalary}</p>
                 <p className='text-center'>The remaining spending you have for this month is ${((monthlySalary - (monthlySalary * .2)) - (needs + wants)).toFixed(2)}</p>
                 <p className='text-center'>The minimum amount you have to save this year is ${minimumSavings}</p>
+                <p className='text-center'>The amount you have saved in your bank so far is ${bankSavings}</p>
               </div>
             </div>
           </div>

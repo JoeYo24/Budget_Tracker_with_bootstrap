@@ -19,12 +19,13 @@ class Transaction < ApplicationRecord
     private
 
     def update_monthly_comparisons_savings
-      #Find the associated monthly record
-      monthly_comparison = self.monthly_comparison
+      # Find the associated monthly record
+      month = transaction.date.beginning_of_month
+      monthly_comparison = user.monthly_comparisons.find_by(month: month)
       return unless monthly_comparison
 
-      #Calculate and set the new savings amount
-      new_savings = monthly_comparison.transactions.sum(:amount)
+      # Subtract the amount of the transaction being destroyed
+      new_savings = monthly_comparison.savings - amount
       monthly_comparison.update(savings: new_savings)
     end
 

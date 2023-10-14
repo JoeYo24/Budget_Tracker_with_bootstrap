@@ -47,6 +47,7 @@ module Api
         if @transaction.transaction_type == 'Savings'
           if @transaction.goal_id.present?
             # This is a Savings tied to a goal, do nothing with bank savings.
+            # Optionally, you can add logic for handling Savings with goals.
           else
             # This is a regular Savings transaction.
             amount = @transaction.amount
@@ -57,6 +58,9 @@ module Api
               return
             end
           end
+        elsif @transaction.transaction_type == 'Needs'
+          # This is a Needs transaction. Handle it as needed.
+          # You can include specific logic for "Needs" transactions here.
         end
 
         @transaction.destroy

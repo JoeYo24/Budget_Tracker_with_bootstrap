@@ -19,15 +19,22 @@ class Transaction < ApplicationRecord
     private
 
     def update_monthly_comparisons_savings
-      # Find the associated monthly record
-      month = transaction.date.beginning_of_month
-      monthly_comparison = user.monthly_comparisons.find_by(month: month)
-      return unless monthly_comparison
+      # Check if the transaction is a savings transaction
+      return unless transaction_type == 'Savings'
 
-      # Subtract the amount of the transaction being destroyed
-      new_savings = monthly_comparison.savings - amount
-      monthly_comparison.update(savings: new_savings)
+      # Wrap the code in a transaction block
+      Transaction.transaction do
+        # Find the associated monthly record
+        month = date.beginning_of_month
+        monthly_comparison = user.monthly_comparisons.find_by(month: month)
+        return unless monthly_comparison
+
+        # Subtract the amount of the transaction being destroyed
+        new_savings = monthly_comparison.savings - amount
+        monthly_comparison.update(savings: new_savings)
+      end
     end
+
 
     def update_goal_progress
       if goal && goal_id && savings_transaction.applied == true

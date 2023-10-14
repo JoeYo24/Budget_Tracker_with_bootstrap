@@ -35,7 +35,6 @@ class Transaction < ApplicationRecord
       end
     end
 
-
     def update_goal_progress
       if goal && goal_id && savings_transaction.applied == true
         updated_progress = goal.progress - (amount / goal.amount) * 100

@@ -24,3 +24,6 @@ Probably the hardest part of the project for me was getting goals and monthly co
 
 I also will never know if the months will go to 13 instead of cycling back to 1 like it should and I will also never know if monthly comparisons will automatically delete after 1 year like I have it set up to.
 
+Demo: 
+https://www.loom.com/share/8d20b872c41642408d474b0b077e6011?sid=3d9d9791-8723-4085-86b1-23851ccca138
+

@@ -212,7 +212,7 @@ const MyDiary = () => {
                       .slice(0, 15) // Only show the 15 most recent transactions
                       .map((transaction) => {
                         return (
-                          <tr key={transaction.id}>
+                          <tr className={transaction.transaction_type} key={transaction.id}>
                             <td>{transaction.date}</td>
                             <td>{transaction.description}</td>
                             <td>{transaction.amount}</td>

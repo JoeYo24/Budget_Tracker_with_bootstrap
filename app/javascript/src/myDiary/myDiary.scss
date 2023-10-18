@@ -91,3 +91,9 @@ table {
             
     }
 }
+tr.Want > td, tr.Need > td {
+    color: red !important;
+}
+tr.Savings > td {
+    color: rgb(33,119,46) !important;
+}
